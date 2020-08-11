@@ -22,7 +22,12 @@ public class UserRepositoryImpl implements UserRepository {
 
 	@Override
 	public User createUser(User user) throws UserAlreadyExistsException {
-		entityManager.persist(user);
+		User userDetails = entityManager.find(User.class, user.getId());
+		if(userDetails == null) {
+			entityManager.persist(user);
+		} else {
+			throw new UserAlreadyExistsException("A user with the given username already exists");
+		}
 		return user;
 	}
 
